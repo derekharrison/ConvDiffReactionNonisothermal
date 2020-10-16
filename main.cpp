@@ -4,9 +4,11 @@
  *  Created on: Oct 13, 2020
  *      Author: d-w-h
  *
- *      This code solves the advection diffusion equation:
+ *      This code solves the coupled convection diffusion and energy equations:
  *      Da/U*d2Ca/dz2 - dCa/dz + ra/U = 0
- *      Using the Gauss-Seidel iteration method.
+ *      Da/U*d2Ca/dz2 - dCa/dz + ra/U = 0
+ *      gamma/(U*rho*Cp)*d2T/dz2 - dT/dz + ra*Ha/(U*rho*Cp) = 0
+ *      Using the Gauss-Seidel method.
  */
 
 #include <math.h>
@@ -16,14 +18,14 @@
 
 double ra(double Ca, double Cb, double T) {
     /* Reaction rate law component a */
-    double k = 1.0;
-    return -k * Ca*Cb*Ca*Ca*T*T;
+    double k = 1.32e+22;
+    return -k*exp(-14017/T)*Ca*Cb*Ca*Ca;
 }
 
 double rb(double Ca, double Cb, double T) {
     /* Reaction rate law component b */
-    double k = 1.0;
-    return -k * 2 *Ca*Cb*Ca*Ca*T*T;
+    double k = 1.32e+22;
+    return -k*2*exp(-14017/T)*Ca*Cb*Ca*Ca;
 }
 
 int main(int argc, char* argv[]) {
@@ -32,17 +34,17 @@ int main(int argc, char* argv[]) {
     s_data solver_data;
 
     /* Parameters */
-    grid_parameters.num_nodes = 40;       //Number of nodes
-    grid_parameters.L = 1.6;              //Length of domain
-    physical_parameters.U = 1.0;          //Fluid velocity
+    grid_parameters.num_nodes = 160;      //Number of nodes
+    grid_parameters.L = 4.0;              //Length of domain
+    physical_parameters.U = 2.0;          //Fluid velocity
     physical_parameters.Cao = 1.0;        //Inlet concentration component a
-    physical_parameters.Cbo = 1.0;        //Inlet concentration component b
-    physical_parameters.To = 1.0;         //Inlet temperature
+    physical_parameters.Cbo = 1.9;        //Inlet concentration component b
+    physical_parameters.To = 273.0;       //Inlet temperature
     physical_parameters.Da = 1.0;         //Diffusion coefficient
     physical_parameters.rho = 1.0;        //Density
-    physical_parameters.Cp = 1.0;         //Heat capacity
+    physical_parameters.Cp = 4.0;         //Heat capacity
     physical_parameters.gamma = 1.0;      //Heat conduction coefficient
-    physical_parameters.Ha = -1.0;        //Reaction enthalpy
+    physical_parameters.Ha = -200.0;      //Reaction enthalpy
 
     /* Allocate data for solver results */
     solver_data.Ca = new double[grid_parameters.num_nodes];

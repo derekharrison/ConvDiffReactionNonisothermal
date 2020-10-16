@@ -144,27 +144,19 @@ void solver(p_params physical_parameters, g_params grid_parameters, s_data* solv
             Tin = (To + gamma*solver_data->T[0]/(U*rho*Cp*0.5*del_z)) / (1+gamma/(U*rho*Cp*0.5*del_z));
             // Left most node
             solver_data->T[0] = (gamma*Tin/(0.5*del_z) + gamma*solver_data->T[1]/del_z + U*rho*Cp*Tin +
-                                 ra(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*del_z*Ha -
-                                 dra_dT(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*T_prev_it[0]*del_z*Ha +
-                                 dra_dCb(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*(solver_data->Cb[0] - Cb_prev_it[0])*del_z*Ha +
-                                 dra_dCa(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*(solver_data->Ca[0] - Ca_prev_it[0])*del_z*Ha) /
-                                (gamma/(0.5*del_z) + gamma/del_z + U*rho*Cp - dra_dT(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*del_z*Ha);
+                                 ra(Ca_prev_it[0], Cb_prev_it[0], T_prev_it[0])*del_z*Ha) /
+                                (gamma/(0.5*del_z) + gamma/del_z + U*rho*Cp);
             // Central nodes
             for(i = 1; i < num_nodes - 1; ++i) {
                 solver_data->T[i] = (gamma*solver_data->T[i-1]/del_z + gamma*solver_data->T[i+1]/del_z + U*rho*Cp*solver_data->T[i-1] +
-                                     ra(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*del_z*Ha -
-                                     dra_dT(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*T_prev_it[i]*del_z*Ha +
-                                     dra_dCb(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*(solver_data->Cb[i] - Cb_prev_it[i])*del_z*Ha +
-                                     dra_dCa(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*(solver_data->Ca[i] - Ca_prev_it[i])*del_z*Ha) /
-                                    (gamma/del_z + gamma/del_z + U*rho*Cp - dra_dT(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*del_z*Ha);
+                                     ra(Ca_prev_it[i], Cb_prev_it[i], T_prev_it[i])*del_z*Ha) /
+                                    (gamma/del_z + gamma/del_z + U*rho*Cp);
             }
             // Right most node
             solver_data->T[num_nodes-1] = (gamma*solver_data->T[num_nodes-2]/del_z + U*rho*Cp*solver_data->T[num_nodes-2] +
-                                           ra(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*del_z*Ha -
-                                           dra_dT(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*T_prev_it[num_nodes-1]*del_z*Ha +
-                                           dra_dCb(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*(solver_data->Cb[num_nodes-1] - Cb_prev_it[num_nodes-1])*del_z*Ha +
-                                           dra_dCa(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*(solver_data->Ca[num_nodes-1] - Ca_prev_it[num_nodes-1])*del_z*Ha) /
-                                          (gamma/del_z + U*rho*Cp - dra_dT(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*del_z*Ha);
+                                           ra(Ca_prev_it[num_nodes-1], Cb_prev_it[num_nodes-1], T_prev_it[num_nodes-1])*del_z*Ha) /
+                                          (gamma/del_z + U*rho*Cp);
+
             ++inner_it;
         }
 

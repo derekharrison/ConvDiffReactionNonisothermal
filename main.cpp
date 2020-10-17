@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     physical_parameters.rho = 1.0;        //Density
     physical_parameters.Cp = 4.0;         //Heat capacity
     physical_parameters.gamma = 1.0;      //Heat conduction coefficient
-    physical_parameters.Ha = -20.0;      //Reaction enthalpy
+    physical_parameters.Ha = -20.0;       //Reaction enthalpy
 
     /* Allocate data for solver results */
     solver_data.Ca = new double[grid_parameters.num_nodes];
